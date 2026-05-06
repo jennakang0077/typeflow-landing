@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TypeFlow v2 — Typography System Engine</title>
+  <style>
+    :root {
+      --bg: #0f0f10;
+      --surface: #171718;
+      --surface-2: #202022;
+      --border: #303033;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --soft: #71717a;
+      --accent: #8b8cff;
+      --accent-2: #b8b8ff;
+      --radius: 16px;
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "SF Mono", "Roboto Mono", Menlo, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1e1e24 0, var(--bg) 42%);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+      letter-spacing: -0.02em;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 650;
+      letter-spacing: -0.04em;
+    }
+
+    .logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent-2);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 84px 0 72px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr);
+      gap: 48px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      font-size: 12px;
+      font-family: var(--mono);
+      letter-spacing: 0;
+      margin-bottom: 18px;
+    }
+
+    .pulse {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 16px var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(48px, 8vw, 84px);
+      line-height: 0.92;
+      letter-spacing: -0.075em;
+      margin-bottom: 24px;
+      max-width: 760px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.65;
+      max-width: 620px;
+      margin-bottom: 28px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      font-weight: 560;
+      font-size: 14px;
+      transition: transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: #28282c;
+      border-color: #45454a;
+    }
+
+    .btn.primary {
+      background: var(--text);
+      color: #111;
+      border-color: var(--text);
+    }
+
+    .btn.primary:hover {
+      background: #ffffff;
+    }
+
+    .micro {
+      margin-top: 14px;
+      color: var(--soft);
+      font-size: 13px;
+    }
+
+    .plugin-card {
+      background: rgba(24,24,26,0.9);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 32px 90px rgba(0,0,0,0.36);
+    }
+
+    .plugin-top {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      background: #242426;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .plugin-ui {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      height: 420px;
+      background: #1e1e1e;
+    }
+
+    .sidebar {
+      background: #252526;
+      border-right: 1px solid #3c3c3c;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel-title {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: #71717a;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #3c3c3c;
+    }
+
+    .control {
+      display: grid;
+      gap: 5px;
+    }
+
+    .control label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: #71717a;
+      text-transform: uppercase;
+    }
+
+    .fake-input,
+    .fake-select {
+      height: 26px;
+      border-radius: 5px;
+      border: 1px solid #3c3c3c;
+      background: #2c2c2c;
+      color: #f3f4f6;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      justify-content: space-between;
+    }
+
+    .preview-panel {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .preview-tabs {
+      height: 36px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      padding: 0 10px;
+      border-bottom: 1px solid #3c3c3c;
+      background: #252526;
+    }
+
+    .chip {
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid #3c3c3c;
+      color: #a1a1aa;
+      font-size: 11px;
+    }
+
+    .chip.active {
+      background: #f3f4f6;
+      color: #1e1e1e;
+      border-color: #f3f4f6;
+    }
+
+    .type-preview {
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+      overflow: hidden;
+    }
+
+    .type-row {
+      border: 1px solid #3c3c3c;
+      background: #252526;
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+
+    .type-label {
+      font-family: var(--mono);
+      color: #71717a;
+      font-size: 9px;
+      margin-bottom: 4px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .h1-sample { font-size: 34px; line-height: 1; font-weight: 700; letter-spacing: -0.04em; }
+    .h2-sample { font-size: 25px; line-height: 1.08; font-weight: 650; letter-spacing: -0.03em; }
+    .body-sample { font-size: 14px; line-height: 1.55; color: #d4d4d8; }
+    .caption-sample { font-size: 11px; color: #a1a1aa; font-family: var(--mono); }
+
+    section {
+      padding: 88px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .section-head {
+      max-width: 720px;
+      margin-bottom: 34px;
+    }
+
+    .section-kicker {
+      color: var(--accent-2);
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1;
+      letter-spacing: -0.06em;
+      margin-bottom: 16px;
+    }
+
+    .section-head p,
+    .muted-text {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .feature {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+
+    .feature h3 {
+      font-size: 18px;
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .logic-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .code-card,
+    .ratio-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      overflow: hidden;
+    }
+
+    pre {
+      font-family: var(--mono);
+      color: #d4d4d8;
+      font-size: 12px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .ratio-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .ratio-item {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+    }
+
+    .ratio-item strong {
+      color: var(--accent-2);
+      font-family: var(--mono);
+    }
+
+    .ratio-item span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .step {
+      padding: 18px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.035);
+      min-height: 120px;
+    }
+
+    .step-num {
+      color: var(--soft);
+      font-family: var(--mono);
+      font-size: 11px;
+      margin-bottom: 18px;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .final-cta {
+      text-align: center;
+      padding: 104px 0;
+    }
+
+    .final-cta h2 {
+      max-width: 760px;
+      margin: 0 auto 18px;
+    }
+
+    .final-cta p {
+      max-width: 600px;
+      margin: 0 auto 28px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    footer {
+      padding: 28px 0 48px;
+      color: var(--soft);
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .logic-card {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 52px;
+      }
+
+      .plugin-ui {
+        grid-template-columns: 150px 1fr;
+      }
+
+      .grid-3,
+      .workflow {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <a href="#" class="brand">
+        <span class="logo">TF</span>
+        <span>TypeFlow v2</span>
+      </a>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#logic">Type Scale</a>
+        <a href="#workflow">Workflow</a>
+        <a href="https://github.com/YOUR_USERNAME/typeflow-v2" target="_blank" rel="noreferrer">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <div class="eyebrow"><span class="pulse"></span> Figma plugin · Typography system engine</div>
+          <h1>Generate typography systems, not just text styles.</h1>
+          <p>TypeFlow helps designers define type rules once, then generate tokens, styles, variable bindings, and developer-ready outputs in one repeatable workflow.</p>
+          <div class="cta-row">
+            <a class="btn primary" href="https://github.com/YOUR_USERNAME/typeflow-v2" target="_blank" rel="noreferrer">Download on GitHub</a>
+            <a class="btn" href="#features">See features</a>
+          </div>
+          <div class="micro">Install locally through Figma → Plugins → Development → Import plugin from manifest.</div>
+        </div>
+
+        <div class="plugin-card" aria-label="TypeFlow plugin preview mockup">
+          <div class="plugin-top">
+            <span>TypeFlow Preview</span>
+            <span>Ready</span>
+          </div>
+          <div class="plugin-ui">
+            <aside class="sidebar">
+              <div class="panel-title">Configuration</div>
+              <div class="control">
+                <label>Font Family</label>
+                <div class="fake-select">Inter <span>⌄</span></div>
+              </div>
+              <div class="control">
+                <label>Mobile</label>
+                <div class="fake-input">16 px · 1.2</div>
+              </div>
+              <div class="control">
+                <label>Tablet</label>
+                <div class="fake-input">17 px · 1.22</div>
+              </div>
+              <div class="control">
+                <label>Desktop</label>
+                <div class="fake-input">18 px · 1.25</div>
+              </div>
+              <div class="control">
+                <label>Output</label>
+                <div class="fake-input">JSON / CSS</div>
+              </div>
+            </aside>
+            <div class="preview-panel">
+              <div class="preview-tabs">
+                <span class="chip active">Mobile</span>
+                <span class="chip">Tablet</span>
+                <span class="chip">Desktop</span>
+              </div>
+              <div class="type-preview">
+                <div class="type-row">
+                  <div class="type-label">Heading / H1</div>
+                  <div class="h1-sample">Build systems faster</div>
+                </div>
+                <div class="type-row">
+                  <div class="type-label">Heading / H2</div>
+                  <div class="h2-sample">Preview responsive type scales</div>
+                </div>
+                <div class="type-row">
+                  <div class="type-label">Body / Medium</div>
+                  <div class="body-sample">Generate styles, bind variables, and export structured data from one source.</div>
+                </div>
+                <div class="type-row">
+                  <div class="type-label">Caption</div>
+                  <div class="caption-sample">16px / 24px / -0.01em</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features">
+        <div class="section-head">
+          <div class="section-kicker">Features</div>
+          <h2>One workflow from design rules to usable outputs.</h2>
+          <p>TypeFlow connects decisions that are usually scattered across styles, variables, exports, and handoff notes.</p>
+        </div>
+        <div class="grid-3">
+          <div class="feature">
+            <h3>Generate type scales</h3>
+            <p>Use base size and ratio to create proportional hierarchies for headings, body, and captions.</p>
+          </div>
+          <div class="feature">
+            <h3>Bind styles to variables</h3>
+            <p>Create text styles and typography variables, then connect them so the system stays editable.</p>
+          </div>
+          <div class="feature">
+            <h3>Export JSON / CSS</h3>
+            <p>Turn design decisions into structured data and developer-friendly outputs for handoff.</p>
+          </div>
+          <div class="feature">
+            <h3>Multi-device modes</h3>
+            <p>Define separate mobile, tablet, and desktop logic instead of relying on one static scale.</p>
+          </div>
+          <div class="feature">
+            <h3>Import and reuse</h3>
+            <p>Bring saved TypeFlow JSON back into the plugin to restore or continue a system.</p>
+          </div>
+          <div class="feature">
+            <h3>Save presets</h3>
+            <p>Store repeated configurations for product systems, experiments, or future iterations.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="logic">
+        <div class="section-head">
+          <div class="section-kicker">Type scale logic</div>
+          <h2>Designed around relationships, not arbitrary sizes.</h2>
+          <p>A typography system should be easy to adjust without manually rewriting every text style. TypeFlow uses base size + ratio to keep hierarchy proportional and reusable.</p>
+        </div>
+        <div class="logic-card">
+          <div class="ratio-card">
+            <h3>Responsive ratio choices</h3>
+            <div class="ratio-list">
+              <div class="ratio-item"><strong>1.2</strong><span>Mobile: tighter hierarchy for smaller screens and compact layouts.</span></div>
+              <div class="ratio-item"><strong>1.22</strong><span>Tablet: a slightly more open rhythm without becoming too dramatic.</span></div>
+              <div class="ratio-item"><strong>1.25</strong><span>Desktop: stronger visual separation for larger screens and denser information.</span></div>
+            </div>
+          </div>
+          <div class="code-card">
+            <pre>{
+  "h1": {
+    "fontSize": { "mobile": 33, "tablet": 37, "desktop": 44 },
+    "lineHeight": { "mobile": 40, "tablet": 44, "desktop": 56 },
+    "letterSpacing": { "mobile": -0.82, "tablet": -0.92, "desktop": -1.1 }
+  }
+}</pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="workflow">
+        <div class="section-head">
+          <div class="section-kicker">Workflow</div>
+          <h2>Define once, generate across the system.</h2>
+          <p>The goal was not to automate everything, but to make the system more reliable by generating connected outputs from the same logic.</p>
+        </div>
+        <div class="workflow">
+          <div class="step"><div class="step-num">01</div><strong>Define</strong><span>Choose font, base sizes, ratios, and weights.</span></div>
+          <div class="step"><div class="step-num">02</div><strong>Preview</strong><span>Check hierarchy across mobile, tablet, and desktop.</span></div>
+          <div class="step"><div class="step-num">03</div><strong>Apply</strong><span>Create styles, variables, and bindings in Figma.</span></div>
+          <div class="step"><div class="step-num">04</div><strong>Export</strong><span>Generate JSON or CSS for handoff and reuse.</span></div>
+          <div class="step"><div class="step-num">05</div><strong>Reuse</strong><span>Import JSON or load presets to continue iterating.</span></div>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <h2>Try TypeFlow as a local Figma plugin.</h2>
+        <p>Download the project from GitHub, import the manifest into Figma, and generate your first typography system.</p>
+        <div class="cta-row" style="justify-content:center;">
+          <a class="btn primary" href="https://github.com/YOUR_USERNAME/typeflow-v2" target="_blank" rel="noreferrer">Download on GitHub</a>
+          <a class="btn" href="#logic">View type logic</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>TypeFlow v2</span>
+      <span>Designed and built as an AI-assisted product workflow.</span>
+    </footer>
+  </div>
+</body>
+</html>
